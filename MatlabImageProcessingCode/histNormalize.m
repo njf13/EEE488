@@ -5,13 +5,13 @@ sizeVec=size(image)
 rows = sizeVec(1,1)
 cols = sizeVec(1,2)
 
-minim=min(image)
+minim=min(min(image));
 
-range=max(image)-minim
+range=max(max(image))-minim;
 
 for x=1:cols
     for y=1:rows
-        normalized(x,y)=floor((image(y,x)+1-minim)*256.0/double(range));
+        normalized(y,x)=floor((image(y,x)+1-minim)*256.0/double(range));
     end
 end
 end
