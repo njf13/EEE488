@@ -3,7 +3,7 @@ function equalized = imgEqualize(image)
     histo = imgHistogram(image);
     normedHisto = histNormalize(histo);
     
-    [rows,cols] = size(image);
+    [rows,cols, channels] = size(image);
     
     for x=1:cols
         for y=1:rows
