@@ -10,7 +10,7 @@ trhalf=floor(trows/2);
 tchalf=floor(tcols/2);
 
 for x=trhalf+1:icols-trhalf
-    for y=tchalf+1:icols-tchalf
+    for y=tchalf+1:irows-tchalf
         sum=0;
         for iwin=1:trows
             for jwin=1:tcols

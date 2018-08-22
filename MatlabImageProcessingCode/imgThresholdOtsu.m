@@ -1,13 +1,17 @@
-function thresholded = imgThresholdOtsu(image)
+function [level, maximum] = imgThresholdOtsu(image)
 
     
     [rows, cols]=size(image);
     
     histo = imgHistogram(image);
     
+    maxValue = max(max(max(size(histo))));
+    
+    total=0;
+    
     for i=1:max(size(histo))
         
-        total = total + histo(i)
+        total = total + histo(i);
         
     end
 
@@ -18,7 +22,9 @@ function thresholded = imgThresholdOtsu(image)
     
     maximum = 0;
     
-    sum1= dot( (0:max(size(histo)), histo));
+    axisVec = [0.0:1.0:double(maxValue)-1.0]
+    size(histo)
+    sum1= dot( [0.0:1.0:double(maxValue)-1.0], histo);
     
     for ii=1:max(size(histo))
         omegaB=omegaB+histo(ii);
