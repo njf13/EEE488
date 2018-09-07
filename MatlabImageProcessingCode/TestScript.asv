@@ -48,10 +48,8 @@ figure(7)
 convolved = convolve(WORKING_IMAGE, templateAveraging);
 imshow(convolved);
 
-thresholdImg = imgThreshold(WORKING_IMAGE, level*0.9, maximum);
-
 figure(8)
-convolved = convolve(thresholdImg, templateAveraging);
+convolved = convolve(imgThreshold(WORKING_IMAGE, level/2, maximum), templateAveraging);
 imshow(convolved);
 
 figure(9)
@@ -63,14 +61,6 @@ figure(10)
 dilated = dilation(WORKING_IMAGE, templateGaussianEven);
 imshow(dilated);
 
-figure(11)
-edgeImg=detect_edges(thresholdImg);
-imshow(edgeImg);
-
-figure(12)
-edgeImg = detect_edges_sobel_2(thresholdImg,2);
-imshow(edgeImg);
-
-
+figure(11
 
 disp('End test script...')

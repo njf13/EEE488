@@ -1,9 +1,9 @@
 function normalized = histNormalize(image)
 
-sizeVec=size(image)
+sizeVec=size(image);
 
-rows = sizeVec(1,1)
-cols = sizeVec(1,2)
+rows = sizeVec(1,1);
+cols = sizeVec(1,2);
 
 minim=min(min(image));
 
