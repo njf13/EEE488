@@ -1,15 +1,16 @@
 globals [
   initial-seeds   ;; how many seed atoms (green patches) we started with
-
+  dendrite-color
 ]
 
 
-breed [seeds seed]    ;; bright red turtles -- the leading edge of the fire
+breed [seeds seed]    ;; bright dendrite-color turtles -- the leading edge of the fire
 turtles-own [new?]
 
 to setup
   clear-all
   set-default-shape turtles "square"
+  set dendrite-color green
   ;; make some green seeds
   ask n-of seed-nodes patches
     [ set pcolor green ]
@@ -41,19 +42,22 @@ to move
 ;			pen-down
 			
       set heading (heading + angle / 2 - (random angle))
+		
+      let range-ahead 10
+      let i 1
+     	while [ i <= range-ahead ] [
+     	  if ([pcolor] of patch-ahead i = dendrite-color) [ die ]
+     	  if ([pcolor] of patch-left-and-ahead 5 i = dendrite-color) [ die ]
+     	  if ([pcolor] of patch-right-and-ahead 5 i = dendrite-color) [ die ]
+     	  set i (i + 1)
+     	]
 			
-			if ([pcolor] of patch-ahead 1 = red) [ die ]
-			if ([pcolor] of patch-ahead 2 = red) [ die ]
-			if ([pcolor] of patch-ahead 3 = red) [ die ]
-			if ([pcolor] of patch-ahead 4 = red) [ die ]
-			if ([pcolor] of patch-ahead 5 = red) [ die ]
-			
 			forward 1
-			set pcolor red
+			set pcolor dendrite-color
 			forward 1
-			set pcolor red
+			set pcolor dendrite-color
 			forward 1
-			set pcolor red
+			set pcolor dendrite-color
   		]
 end
 
@@ -69,7 +73,7 @@ end
 
 to spawn
   sprout-seeds random 5
-    [ set color red ]
+    [ set color dendrite-color ]
   set pcolor white
 
 end
