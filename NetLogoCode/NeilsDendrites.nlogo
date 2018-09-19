@@ -6,73 +6,97 @@ globals [
 
 breed [seeds seed]    ;; bright dendrite-color turtles -- the leading edge of the fire
 turtles-own [new?]
+patches-own [barrier?]  ; an attempt to signify to turtles that they can't cross these patches
 
 to setup
   clear-all
+
   set-default-shape turtles "square"
   set dendrite-color green
-  ;; make some green seeds
-  ask n-of seed-nodes patches
-    [ set pcolor green ]
-  ;; set seed atom count
-  set initial-seeds count patches with [pcolor = green]
-  ask patches with [pcolor = green][
+
+  ; start growing at a single point towards the center left of the screen
+  let x min-pxcor + 20
+  let y (max-pycor + min-pycor) / 2
+  ask patch x y [
       spawn
     ]
+  ; originally start with turtles drawing w/ large pen size
+  ; and heading to the right of the screen
   ask turtles[
     set breed seeds
+    set pen-size 10
+    set heading 90
+   ]
+   ask patches [
+     set barrier? false
    ]
   reset-ticks
 end
 
+; main driver function
 to go
-
-  duplicate
+  branch
   move
   tick
 end
 
+
 to move
   ; here are the commands to draw the tree
-
 		ask turtles
 		  [
       set new? false
 
-;			pen-down
+			pen-down
 			
-      set heading (heading + angle / 2 - (random angle))
+      if (pen-size < 1) [ die ]
+
+      ; set to turn 1/3 of the time in a random direction
+      if (random 3 < 1) [
+        set heading (heading + angle / 2 - (random angle))
+		  ]
 		
+		  ; look ahead to see if there are any barriers before advancing
       let range-ahead 10
-      let i 1
-     	while [ i <= range-ahead ] [
-     	  if ([pcolor] of patch-ahead i = dendrite-color) [ die ]
-     	  if ([pcolor] of patch-left-and-ahead 5 i = dendrite-color) [ die ]
-     	  if ([pcolor] of patch-right-and-ahead 5 i = dendrite-color) [ die ]
-     	  set i (i + 1)
+      let i range-ahead
+     	while [ i > 0] [
+     	  if ([barrier?] of patch-ahead i) [ die ]
+     	  if ([barrier?] of patch-left-and-ahead 5 i) [ die ]
+     	  if ([barrier?] of patch-right-and-ahead 5 i) [ die ]
+     	  set i (i - 1)
      	]
 			
-			forward 1
-			set pcolor dendrite-color
-			forward 1
-			set pcolor dendrite-color
-			forward 1
-			set pcolor dendrite-color
+			; growth length should be shorter than 'range-ahead' - 'pen-size' / 2
+			; since barriers are the smaller patches underneath the pen line
+			let growth-length (range-ahead - 5)
+			let j 0
+			while [j < growth-length] [
+			  forward 1
+			  ask patch-here [set barrier? true]
+			  set j (j + 1)
+			]
+	
   		]
 end
 
-to duplicate
+to branch
   ;; the number of nodes that will branch in any given iteration
   let num ceiling ((count turtles) * branching-factor)
 
+  ; head in different directions when branching
   ask n-of num turtles [
-    hatch 1
+    hatch 1 [
+      set pen-size pen-size - 1
+      set heading (heading - (angle))
+    ]
+    set pen-size pen-size - 1
+    set heading (heading + (angle))
   ]
 
 end
 
 to spawn
-  sprout-seeds random 5
+  sprout-seeds 1
     [ set color dendrite-color ]
   set pcolor white
 
@@ -81,11 +105,11 @@ end
 GRAPHICS-WINDOW
 0
 0
-911
-732
+1612
+813
 -1
 -1
-3.0
+4.0
 1
 10
 1
@@ -95,10 +119,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--150
-150
--120
-120
+-200
+200
+-100
+100
 0
 0
 1
@@ -148,7 +172,7 @@ angle
 angle
 0
 180
-45.0
+30.0
 1
 1
 degrees
@@ -163,23 +187,8 @@ branching-factor
 branching-factor
 0
 1
-0.9
+0.2
 0.1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-934
-161
-1106
-194
-seed-nodes
-seed-nodes
-1
-10
-2.0
-1
 1
 NIL
 HORIZONTAL
