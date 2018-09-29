@@ -1,4 +1,4 @@
-function [sobel_img] = detect_edges_sobel_2(img, winsz)
+function [edge_mag, edge_dir, sobel_img] = detect_edges_sobel_2(img, winsz)
 
 %     close all;
 %     clear all;
@@ -23,14 +23,14 @@ function [sobel_img] = detect_edges_sobel_2(img, winsz)
         smooth(x_win+1) = factorial(winsz-1)./(factorial(winsz-1-x_win)*factorial(x_win));
     end
     
-    smooth
+    
     
     difff=[];
     for x_win=0:winsz-1
         difff(x_win+1)=pascal_coefficient(x_win,winsz-2)-pascal_coefficient(x_win-1,winsz-2);
     end
     
-    difff
+    
 % 
 %     sobel_x = 0;
 %     for x_win=1:winsz
@@ -53,10 +53,10 @@ function [sobel_img] = detect_edges_sobel_2(img, winsz)
             x_mag = sobel_x(img(y-w2+1:y+w2+1,x-w2+1:x+w2+1), winsz, smooth, difff);
             y_mag = sobel_y(img(y-w2+1:y+w2+1,x-w2+1:x+w2+1), winsz, smooth, difff);
             
-            edge_mag(y,x) = sqrt( x_mag.^2 + y_mag.^2 );
-            edge_dir(y,x) = atan2( y_mag, x_mag);
+            edge_mag(y,x) = cast(sqrt( x_mag.^2 + y_mag.^2 ), 'double');
+            edge_dir(y,x) = cast(atan2( y_mag, x_mag), 'double');
             
         end
     end
-    sobel_img=edge_mag;
+    sobel_img=cast(edge_mag, 'uint8');
 end
