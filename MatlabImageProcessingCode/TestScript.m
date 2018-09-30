@@ -101,10 +101,20 @@ imshow(sobel_img_small);
 
 sizeVec = size(sobel_img_small);
 rows = sizeVec(1,1);
-r_tab = invariant_r_table(rows, sobel_img_small, Ms, Angs);
+r_tab = invariant_r_table(180, sobel_img_small, Ms, Angs);
 
 figure(16)
 hough = invariant_generalized_hough( sobel_img, r_tab, M, Ang);
+houghStd = std(hough,1,'all');
+[rr,cc]=size(hough);
+for i=1:rr
+    for j=1:cc
+        if hough(i,j)<6.0*houghStd
+            hough(i,j)=0;
+        end
+    end
+end
+
 surf(hough);
 
 % tempMatch = template_matching(sobel_img, sobel_img_small);

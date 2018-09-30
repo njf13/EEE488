@@ -4,7 +4,7 @@ function [T]=invariant_r_table(entries, inputimage, M, Ang)
 
 %[M,Ang]=detect_edges_sobel_2(inputimage,3);
 
-alfa=pi()/10;
+alfa=pi()/4;
 
 D=pi()/entries;
 s=0;
