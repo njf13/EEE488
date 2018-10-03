@@ -109,7 +109,7 @@ houghStd = std(hough,1,'all');
 [rr,cc]=size(hough);
 for i=1:rr
     for j=1:cc
-        if hough(i,j)<6.0*houghStd
+        if hough(i,j)<3.0*houghStd
             hough(i,j)=0;
         end
     end
