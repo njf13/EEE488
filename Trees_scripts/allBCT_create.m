@@ -6,7 +6,7 @@ nodes = 10;
 branch_angle = 60;
 branch_length = 10;
 
-BCTs = allBCTs_tree(nodes);
+[BCTs all_trees] = allBCTs_tree(nodes);
 X = zeros(nodes,1);
 Y = zeros(nodes,1);
 Z = zeros(nodes,1); %  Some functions require a Z vector
@@ -26,13 +26,14 @@ for i = 1:length(BCTs)
     %only plot if consecutive_Cs is false AND the first node is not a
     %branch
     if(~(consecutive_Cs|BCTs(i,1)==2))
-        dA_struct = BCT_tree(BCTs(i,:),'-dA');
-        trees{j}.dA = full(dA_struct.dA);
-
-        [trees{j}.X, trees{j}.Y] = dA_build(trees{j}.dA, branch_angle, branch_length);
-        trees{j}.Z = Z;
+        %dA_struct = BCT_tree(BCTs(i,:),'-dA');
+        %trees{j}.dA = full(dA_struct.dA);
+        trees{tree_count} = all_trees{i};
+        
+        [trees{tree_count}.X, trees{tree_count}.Y] = dA_build(trees{tree_count}.dA, branch_angle, branch_length);
+        trees{tree_count}.Z = Z;
         figure
-        plot_tree(j);
-        j=j+1;
+        plot_tree(trees{tree_count});
+        tree_count=tree_count+1;
     end
 end
