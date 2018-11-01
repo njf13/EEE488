@@ -6,11 +6,11 @@ disp('Begin test script...')
 
 WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Desktop\NeilsDendrites.png';
 %WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\serveimage.png';
-WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194Square.jpg';
-SUBSAMPLE_IMAGE_PATH =  'c:\Users\sysadmin\Pictures\Subsample194_3.jpg';
+%WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194Square.jpg';
+%SUBSAMPLE_IMAGE_PATH =  'c:\Users\sysadmin\Pictures\Subsample194_4.jpg';
 
-WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\simpleTestImage.jpg';
-SUBSAMPLE_IMAGE_PATH =  'c:\Users\sysadmin\Pictures\simpleTestImageSubsample.jpg';
+%WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\simpleTestImage.jpg';
+%SUBSAMPLE_IMAGE_PATH =  'c:\Users\sysadmin\Pictures\simpleTestImageSubsample.jpg';
 
 WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view.png';
 SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view subsample.png';
