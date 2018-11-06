@@ -6,14 +6,14 @@ disp('Begin test script...')
 
 WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Desktop\NeilsDendrites.png';
 %WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\serveimage.png';
-% WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194Square.png';
-% SUBSAMPLE_IMAGE_PATH =  'c:\Users\sysadmin\Pictures\Subsample194.png';
+WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194Square.png';
+SUBSAMPLE_IMAGE_PATH =  'c:\Users\sysadmin\Pictures\Subsample194.png';
 
 %WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\simpleTestImage.jpg';
 %SUBSAMPLE_IMAGE_PATH =  'c:\Users\sysadmin\Pictures\simpleTestImageSubsample.jpg';
 
-WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view.png';
-SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view subsample 2.png';
+% WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view.png';
+% SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view subsample 2.png';
 
 WORKING_IMAGE = imread(WORKING_IMAGE_PATH);
 WORKING_IMAGE = rgb2gray(WORKING_IMAGE);
@@ -94,7 +94,7 @@ figure(17)
 cornerImg = Harris_corner_detection(thresholdImg, 'H');
 imshow(cornerImg);
 
-return
+
 
 [M,Ang, sobel_img] = detect_edges_sobel_2(thresholdImg,3);
 [Ms, Angs, sobel_img_small] = detect_edges_sobel_2(thresholdSubImg,3);
@@ -104,6 +104,8 @@ imshow(sobel_img);
 
 figure(15)
 imshow(sobel_img_small);
+
+return
 
 sizeVec = size(sobel_img_small);
 rows = sizeVec(1,1);

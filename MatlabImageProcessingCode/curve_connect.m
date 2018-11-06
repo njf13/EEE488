@@ -1,7 +1,7 @@
 function [outImg] = curve_connect(inImg)
     [rows,cols]=size(inImg);
     outImg=zeros(rows,cols);
-    [mag,ang]=Edges(inImg);
+    [mag,ang]=detect_edges_sobel_2(inImg,3);
     %mag = max_supr(mag,ang);
     
     for x=1:cols-1
