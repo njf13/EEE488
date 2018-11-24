@@ -25,6 +25,7 @@ function [outputImage]=Harris_corner_detection(inImage, op)
 
                 if(op=='H')
                     outputImage(y,x)= A*B - C^2 - k*((A + B))^2;
+                    
                 else
                     dx=difx(y,x);
                     dy=dify(y,x);

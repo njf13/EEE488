@@ -5,7 +5,7 @@ home;
 Vlineoutput=[];
 Ilineoutput=[];
 deltaz = 0.001;
-z=[0:deltaz:1.0];
+
 
 Vlineinput = 1;
 Vlineoutputnm1=0;
@@ -17,21 +17,25 @@ L=1;
 G=1;
 C=1;
 
-X=1000;
-length = X*deltaz;
+lineArray={}
 
-N=100;
-for n=0:N
-    if n<3
-        Vlineinput = cos(10*pi*n/N);
+for X=1:1000
+    lineArray{X} = TransmissionLineSegmentClass(deltat,deltaz, R, L, G, C);
+end
+
+N=10000;
+for n=0+1:N+1
+    if n<300
+        Vlineinput = cos(10*pi*n/deltaz);
     end
     
-    for z=0:X
-        [Vlineoutputn, Ilineoutputn]= TransmissionLineSegment(Vlineinput, Vlineoutputnm1, Ilineinputn, Ilineinputnm1, 1/N, deltaz, R, L, G, C);
+    for q=0+1:1000+1
+        
+        [Vlineoutput{q}, Ilineoutputn] = lineArray{q}.DriveSegment(Vlineinput, Vlineoutputnm1, Ilineinputn, Ilineinputnm1);
         Vlineoutputnm1 = Vlineoutputn;
         Ilineinputnm1 = Ilineinputn;
-        Vlineoutput(z+1,n+1) = Vlineoutputn;
-        Ilineoutput(z+1,n+1) = Ilineoutputn;
+        Vlineoutput(q,n) = Vlineoutputn;
+        Ilineoutput(q,n) = Ilineoutputn;
         
         Vlineinput = Vlineoutputn;
         Ilineinputn = Ilineoutputn;
@@ -45,9 +49,9 @@ plot(n,Vlineoutput(position,:))
 figure(2)
 plot(n,Ilineoutput(position,:))
 
-X=[0:1:1000]';
+XX=[0:1:X]';
 time=22;
 figure(3)
-plot(X,Vlineoutput(:,time))
+plot(XX,Vlineoutput(:,time))
 figure(4)
-plot(X,Ilineoutput(:,time))
+plot(XX,Ilineoutput(:,time))

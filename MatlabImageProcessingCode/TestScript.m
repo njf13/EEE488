@@ -4,10 +4,10 @@ home;
 
 disp('Begin test script...')
 
-WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Desktop\NeilsDendrites.png';
+% WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Desktop\NeilsDendrites.png';
 %WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\serveimage.png';
-% WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194Square.png';
-% SUBSAMPLE_IMAGE_PATH =  'c:\Users\sysadmin\Pictures\Subsample194.png';
+%  WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194Square.png';
+%  SUBSAMPLE_IMAGE_PATH =  'c:\Users\sysadmin\Pictures\Subsample194.png';
 
 %WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\simpleTestImage.jpg';
 %SUBSAMPLE_IMAGE_PATH =  'c:\Users\sysadmin\Pictures\simpleTestImageSubsample.jpg';
@@ -91,7 +91,7 @@ thresholdSubImg = imgThreshold(SUBSAMPLE_IMAGE, level*0.9, maximum);
 % imshow(curveConnImg);
 
 figure(17)
-cornerImg = Harris_corner_detection(thresholdImg, 'H');
+cornerImg = Harris_corner_detection(thresholdImg, 'X');
 imshow(cornerImg);
 
 return

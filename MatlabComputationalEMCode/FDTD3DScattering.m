@@ -8,9 +8,9 @@ tic
 %nhw - one half wave cycle
 %med - number of media sections
 %js - j position of plane wave front
-IMAX=19*2;
+IMAX=39*2;
 JMAX=39*2;
-KMAX=19*2;
+KMAX=39*2;
 NMAX=2;
 NNMAX=500;
 NHW=40;
@@ -49,9 +49,9 @@ x=0:(IMAX+1);
 y=0:(JMAX+1);
 z=0:(KMAX+1);
 [Mx, My, Mz] = ndgrid(x,y,z);
-IXMED = (Mx >= 15).*(Mx<=25).*(sqrt((My-OJ).^2 + (Mz-OK).^2)<=RADIUS) + 1;
-IYMED = (sqrt((Mx-OI).^2 + (My-OJ+.5).^2 + (Mz-OK).^2) <= RADIUS) + 1;
-IZMED = (sqrt((Mz-OI).^2 + (My-OJ+.5).^2 + (Mz-OK+.5).^2) <= RADIUS) + 1;
+% IXMED = (Mx >= 15).*(Mx<=25).*(sqrt((My-OJ).^2 + (Mz-OK).^2)<=RADIUS) + 1;
+% IYMED = (sqrt((Mx-OI).^2 + (My-OJ+.5).^2 + (Mz-OK).^2) <= RADIUS) + 1;
+% IZMED = (sqrt((Mz-OI).^2 + (My-OJ+.5).^2 + (Mz-OK+.5).^2) <= RADIUS) + 1;
 
 %Step 2 - initialize field components
 EX1 = zeros(1,JMAX+2);
