@@ -1,5 +1,11 @@
 clear all; close all;home;
 format compact;
+
+WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\scattererImg.bmp';
+    
+WORKING_IMAGE = imread(WORKING_IMAGE_PATH);
+WORKING_IMAGE = rgb2gray(WORKING_IMAGE);
+    
 tic
 % From Computational ELectromagnetics by Matthew Sadiku
 % Originally by V. Bemmel and improved by D. Terry
@@ -8,9 +14,9 @@ tic
 %nhw - one half wave cycle
 %med - number of media sections
 %js - j position of plane wave front
-IMAX=39*2;
+IMAX=19*2;
 JMAX=39*2;
-KMAX=39*2;
+KMAX=19*2;
 NMAX=2;
 NNMAX=500;
 NHW=40;
@@ -140,12 +146,12 @@ for NN=1:NNMAX
                 end
                 
                 if((J~=0)&&(J~=JMAX)&&(K~=0))
-                    M=IXMED(I+1,J+1,K+1);
+                    M=IXMED(I+1,J+1,K+1, WORKING_IMAGE);
                     EX(I+1,J+1,K+1,NCUR)=CA(M)*EX(I+1,J+1,K+1,NPR1)+CBMRB(M)*(HZ(I+1,J+1,K+1,NCUR)-HZ(I+1,J-1+1,K+1,NCUR)+HY(I+1,J+1,K-1+1,NCUR)-HY(I+1,J+1,K+1,NCUR));
                 end
                 
                 if(K~=0)
-                    M=IYMED(I+1,J+1,K+1);
+                    M=IYMED(I+1,J+1,K+1, WORKING_IMAGE);
                     if I~=0
                         EY(I+1,J+1,K+1,NCUR)=CA(M)*EY(I+1,J+1,K+1,NPR1)+CBMRB(M)*(HX(I+1,J+1,K+1,NCUR)- HX(I+1,J+1,K-1+1,NCUR)+HZ(I-1+1,J+1,K+1,NCUR)-HZ(I+1,J+1,K+1,NCUR));
                     else
@@ -154,7 +160,7 @@ for NN=1:NNMAX
                 end
                 
                 if((J~=0)&&(J~=JMAX))
-                    M=IZMED(I+1,J+1,K+1);
+                    M=IZMED(I+1,J+1,K+1, WORKING_IMAGE);
                     if(M==1)
                         CAM=1;
                     else
