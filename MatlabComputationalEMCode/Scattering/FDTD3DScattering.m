@@ -33,22 +33,22 @@ OK=20.0;
 RADIUS=5.0;
 
 %constitutive params
-ER=[1.0, 4.0]; %material permittivity
-SIG=[0.1,0.0]; %material permeability
+ER=[1.0, 1e3]; %material permittivity
+SIG=[0.0,6.3e-3]; %material permeability
 
 %statement fn to compute pos. w.r.t. cen. of sphere
 E0=1e-9 / (36*pi); %permittivity of free space
 U0=(1e-7)*4*pi; %permeability of free space
 DT=DELTA/(2*CL);
-R=DT/E0;
+R=DT/(2*E0);
 RA=(DT^2)/(U0*E0*(DELTA^2));
 RB=DT/(U0*DELTA);
 TPIFDT=2.0*pi*F*DT;
 
 %Step 1 - compute media parameters
 
-CA = 1 - R*SIG./ER;
-CB=RA./ER;
+CA = (1 - R*SIG./ER)./(1+R*SIG./ER);
+CB=RA./(ER+R*SIG);
 CBMRB=CB/RB;
 
 x=0:(IMAX+1);
@@ -82,7 +82,7 @@ NPR2=1;
 %graphics for s get assigned at bottom of loop, remember to adjust there
 figure(5)
 s=surf( sqrt(EX(:,:,floor(KMAX/2),NCUR).^2 + EY(:,:,floor(KMAX/2),NCUR).^2 + EZ(:,:,floor(KMAX/2),NCUR).^2))
-
+view(0,90)
 % figure(6)
 % q = quiver(EX(:,:,floor(KMAX/2),NCUR),EY(:,:,floor(KMAX/2),NCUR))
 
@@ -207,7 +207,7 @@ for NN=1:NNMAX
     end
     
     
-    s.ZData = sqrt(EZ(:,:,floor(KMAX/2),NCUR).^2 + EX(:,:,floor(KMAX/2),NCUR).^2+ EY(:,:,floor(KMAX/2),NCUR).^2)
+    s.ZData = sqrt(HZ(:,:,floor(KMAX/2),NCUR).^2 + HX(:,:,floor(KMAX/2),NCUR).^2+ HY(:,:,floor(KMAX/2),NCUR).^2)
     %q = quiver(HX(:,:,floor(KMAX/2),NCUR),HY(:,:,floor(KMAX/2),NCUR))
     pause(0.05);
 end

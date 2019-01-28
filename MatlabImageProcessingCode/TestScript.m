@@ -13,7 +13,7 @@ disp('Begin test script...')
 %SUBSAMPLE_IMAGE_PATH =  'c:\Users\sysadmin\Pictures\simpleTestImageSubsample.jpg';
 
 WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view.png';
-SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view subsample 2.png';
+SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view subsample 5.png';
 
 WORKING_IMAGE = imread(WORKING_IMAGE_PATH);
 WORKING_IMAGE = rgb2gray(WORKING_IMAGE);
@@ -91,8 +91,18 @@ thresholdSubImg = imgThreshold(SUBSAMPLE_IMAGE, level*0.9, maximum);
 % imshow(curveConnImg);
 
 figure(17)
-cornerImg = Harris_corner_detection(thresholdImg, 'X');
+cornerImg = gradient_corner(thresholdImg, 'NI');
 imshow(cornerImg);
+
+centers=[];
+disp('Search for target image...')
+centers = findMoments(WORKING_IMAGE, SUBSAMPLE_IMAGE);
+figure(18)
+imshow(WORKING_IMAGE);
+hold on;
+plot(centers(2,:),centers(1,:),'x');
+
+
 
 return
 
