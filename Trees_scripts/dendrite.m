@@ -105,6 +105,7 @@
             obj.Y = endY;
             obj.Z = endZ;
         end
+
         % A function to calculate the branch order of each node. The
         % beginning will have an order of 0. The branch order of each
         % subsequent node will be calculated by finding the branch order of
@@ -155,3 +156,4 @@
         end
     end
 end
+
