@@ -105,6 +105,53 @@
             obj.Y = endY;
             obj.Z = endZ;
         end
-    
+        % A function to calculate the branch order of each node. The
+        % beginning will have an order of 0. The branch order of each
+        % subsequent node will be calculated by finding the branch order of
+        % the of the parent node, and adding 1 to it.
+        
+        function y = branchOrder(obj)
+            y = zeros(1,obj.nodes);
+            
+            for i = 2:obj.nodes
+                parentNode = find(obj.dA(i,:));
+                y(i) = y(parentNode)+1;
+            end            
+        end
+        
+        % A function to construct a netlist compatible with HSPICE
+        % There are currently no arguments. Future versions may have
+        % arguments for the beginn
+        function y = netlist( obj)
+            y = [];
+            branchCount = 1;
+            str = '* Netlist for Tree';
+            
+            disp(str);
+            str = ['* Netlist created on ' , date()];
+           
+            disp(str);
+            fprintf('\n')
+            
+            str = ['Vsource ', 'n1 ', 'gnd ', '5'];
+            %y = [y;str];
+            disp(str);
+            
+            
+            for i = 1:obj.nodes
+                daughterNodes = find(obj.dA(:, i));
+                for j = 1:length(daughterNodes)
+                    str = ["r", branchCount, " n" , i, " n", daughterNodes(j), " ", i];
+                    disp(join(str,''));
+                    y = [y;str];
+                    
+                    str = ["c", branchCount, " n" , i, " gnd 1p","","",""];
+                    disp(join(str,''));
+                    y = [y;str];
+                    
+                    branchCount = branchCount+1;
+                end
+            end
+        end
     end
 end
