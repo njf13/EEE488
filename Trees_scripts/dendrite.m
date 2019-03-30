@@ -15,11 +15,16 @@
     end
     methods
         %Constructor Function
-        function obj = dendrite(dA_, X_, Y_)
+
+        function obj = dendrite(dA_, X_, Y_, Z_)
             obj.dA = full(dA_);
             obj.X = X_;
             obj.Y = Y_;
-            obj.Z = zeros(length(X_),1);
+            if( isempty(Z_))
+                obj.Z = zeros(length(X_),1);
+            else
+                obj.Z = Z_;
+            end
             obj.nodes = length(obj.X);
             obj.BCT = ones(1,obj.nodes)*obj.dA;
         end
@@ -64,11 +69,15 @@
                 connections = find(obj.dA(:,i));
 
                 for j = 1:length(connections)
-                    plot([obj.X(i) obj.X(connections(j))], [obj.Y(i) obj.Y(connections(j))],'-k','LineWidth',2)
+
+                    plot([obj.X(i) obj.X(connections(j))], [obj.Y(i) obj.Y(connections(j))],'-k','LineWidth',1)
                 end
             end
             xlim([min(obj.X)-1 max(obj.X)+1]);
             ylim([min(obj.Y)-1 max(obj.Y)+1]);
+
+            axis equal;
+            axis off;
             hold off;
             y = fig;
         end
@@ -79,6 +88,7 @@
             % different order, you'll need to run the function more than
             % one time.
             startXYZ = [obj.X, obj.Y, obj.Z];
+
             RX = [1 0 0;
                 0 cosd(X_degrees) sind(X_degrees);
                 0 -sind(X_degrees) cosd(X_degrees);];
@@ -96,6 +106,12 @@
             endZ = endX;
             
             for i = 1:length(endX)
+
+                size(RX)
+                size(RY)
+                size(RZ)
+                size(startXYZ)
+                startXYZ'
                 endXYZ = RZ*RY*RX*startXYZ( i,:)';
                 endX(i) = endXYZ(1);
                 endY(i) = endXYZ(2);
@@ -105,7 +121,6 @@
             obj.Y = endY;
             obj.Z = endZ;
         end
-
         % A function to calculate the branch order of each node. The
         % beginning will have an order of 0. The branch order of each
         % subsequent node will be calculated by finding the branch order of
@@ -126,35 +141,83 @@
         function y = netlist( obj)
             y = [];
             branchCount = 1;
-            str = '* Netlist for Tree';
+
+            BO = obj.branchOrder;
+            r0 = 100; % start with a resistance of 100?
+            c0 = 100; % µF
+            
+            str = ["* Netlist for Tree","","","","","","",""];
             
             disp(str);
-            str = ['* Netlist created on ' , date()];
+            y = [y; str];
+            str = ['* Netlist created on ' , date(),"","","","","",""];
            
             disp(str);
+            y = [y; str];
             fprintf('\n')
             
-            str = ['Vsource ', 'n1 ', 'gnd ', '5'];
-            %y = [y;str];
-            disp(str);
+            % Place sources at all of the termination nodes.
+            str = ["Vsource ", "Vsource ", "gnd ", "PULSE (0 10 0 1n 1n 49n 100n)", "", "", "", ""];
+            disp(join(str,''));
+            y = [y;str];
             
+            % Place a 0V source from the beginning node to GND. Probably an
+            % inefficent way to do this, but it simplifies the code for
+            % now.
+            str = ["Vgnd ", "n1 ", "gnd ", "0", "", "" ,"", "" ];
+            disp(join(str,''));
+            y = [y;str];            
             
             for i = 1:obj.nodes
                 daughterNodes = find(obj.dA(:, i));
                 for j = 1:length(daughterNodes)
-                    str = ["r", branchCount, " n" , i, " n", daughterNodes(j), " ", i];
+
+                    % If the other node is a termination point, it should
+                    % connect to Vsource, instead of a n# node.
+                    if(obj.BCT(daughterNodes(j))== 0)
+                        node2 = " Vsource";
+                    else
+                        node2 = " n" + daughterNodes(j);
+                        node2 = join(node2,'');
+                    end
+                    
+                    str = ["r", branchCount, " n" , i, node2, " ", r0*2^BO(i), ""];
                     disp(join(str,''));
                     y = [y;str];
                     
-                    str = ["c", branchCount, " n" , i, " gnd 1p","","",""];
+                    str = ["c", branchCount, " n" , daughterNodes(j), " gnd ",c0*0.5^BO(i),"u",""];
                     disp(join(str,''));
                     y = [y;str];
                     
                     branchCount = branchCount+1;
                 end
             end
+
+            
+            % Add analysis commands here
+            % All analysis commands except DC op will have an asterisk at
+            % the beginning to "comment" them out. That way the person
+            % doing the analysis can remove the asterisk for the desired
+            % analysis.
+            str = ["\n.op", "","","","","","",""];
+            disp(join(str,''));
+            y = [y;str];
+            
+            str = ["*.tran 1ns 1u", "","","","","","",""];
+            disp(join(str,''));
+            y = [y;str];
+            
+            str = ["*.AC dec 10 10 1G", "","","","","","",""];
+            disp(join(str,''));
+            y = [y;str];
+            
+            % Add .end here
+            str = ["\n.end", "","","","","","",""];
+            disp(join(str,''));
+            y = [y;str];
         end
         
+<<<<<<< HEAD
         % A function to create the nearest-neighbor directed adjacency
         % matrix from a set of 2-D locations where the second row of
         % locations is the x-coordinate and the first row of locations is
@@ -175,4 +238,54 @@
         end
     end
 end
+=======
+        % Create a function to generate the Ladder network that corresponds
+        % to a given dendrite. This is a network that takes one point as an
+        % anchor or ground point, and extends a large trunk in one
+        % direction from this point. All of the other nodes in the set will
+        % be connected to the trunk by a perpendicular line.
+        function y = ladder( obj)
+            % Start by copying the X, Y, Z coordinates. Create extra points
+            % to represent the points where each of the branch nodes
+            % connects to the main trunk.
+            X = [obj.X; zeros(obj.nodes - 1, 1)];
+            Y = [obj.Y; zeros(obj.nodes - 1, 1)];
+            Z = [obj.Z; zeros(obj.nodes - 1, 1)];
+            
+            % Each of the 
+            dA = zeros(length(X));
+            
+            % The dendrite is created at the end of the function so that
+            % all of the constructor operations are performed on the
+            % complete data.
+            y = dendrite(dA, X, Y, Z);
+        end
+        
+        % A function to find the fractal dimension of a dendrite using a
+        % boxcounting algorithm of the plot of the dendrite. To use this,
+        % you must install the Add-On titled "Hausdorff (Box-Counting)
+        % Fractal Dimension with multi-resolution calculation". This can be
+        % found in the MATLAB addon menu.
+        % It also saves a figure titled "figure.bmp". So if you have
+        % another file with this title in the operating directory, it will
+        % save over it.
+        function y = fracDim(obj)
+            figure;
+            obj.plot
+            axis off;
+            saveas(gcf, 'figure.bmp', 'bmp')
+            close
+            I = imread('figure.bmp');
+            close;
+>>>>>>> dc49fb6d96ce05cb27d4902db5b584de1567bd12
 
+            Ibw = ~im2bw(I); %Note that the background need to be 0
+            %figure(1);
+            imagesc(Ibw);
+            colormap gray;
+            
+
+            y = BoxCountfracDim(Ibw) %Compute the box-count dimension
+        end
+    end
+end

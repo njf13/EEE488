@@ -4,16 +4,12 @@ home;
 
 disp('Begin test script...')
 
-% WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Desktop\NeilsDendrites.png';
-%WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\serveimage.png';
-%  WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194Square.png';
-%  SUBSAMPLE_IMAGE_PATH =  'c:\Users\sysadmin\Pictures\Subsample194.png';
-
-%WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\simpleTestImage.jpg';
-%SUBSAMPLE_IMAGE_PATH =  'c:\Users\sysadmin\Pictures\simpleTestImageSubsample.jpg';
 
 WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view.png';
 SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view subsample 5.png';
+
+WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194Square.png';
+SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194SquareSample.png';
 
 WORKING_IMAGE = imread(WORKING_IMAGE_PATH);
 WORKING_IMAGE = rgb2gray(WORKING_IMAGE);
@@ -90,36 +86,40 @@ thresholdSubImg = imgThreshold(SUBSAMPLE_IMAGE, level*0.9, maximum);
 % curveConnImg = curve_connect( edgeImg);
 % imshow(curveConnImg);
 
-figure(17)
-cornerImg = gradient_corner(thresholdImg, 'NI');
-imshow(cornerImg);
+% figure(17)
+% cornerImg = gradient_corner(thresholdImg, 'NI');
+% imshow(cornerImg);
 
 centers=[];
 disp('Search for target image...')
 centers = findMoments(WORKING_IMAGE, SUBSAMPLE_IMAGE);
+treeGraph = graph(centers(2,:), centers(1,:));
+treeEdges = treeGraph.Edges;
 figure(18)
 imshow(WORKING_IMAGE);
 hold on;
 plot(centers(2,:),centers(1,:),'x');
+plot(treeEdges, 'b');
 
 
 
-return
+
+
 
 [M,Ang, sobel_img] = detect_edges_sobel_2(thresholdImg,3);
 [Ms, Angs, sobel_img_small] = detect_edges_sobel_2(thresholdSubImg,3);
 
-figure(14)
+figure(19)
 imshow(sobel_img);
 
-figure(15)
+figure(20)
 imshow(sobel_img_small);
 
 sizeVec = size(sobel_img_small);
 rows = sizeVec(1,1);
 r_tab = invariant_r_table(180, sobel_img_small, Ms, Angs);
 
-figure(18)
+figure(21)
 hough = invariant_generalized_hough( sobel_img, r_tab, M, Ang);
 houghStd = std(hough,1,'all');
 [rr,cc]=size(hough);
@@ -137,14 +137,14 @@ surf(hough);
 % figure(17)
 % imshow(tempMatch);
 
-figure(19)
+figure(22)
 [acct, accro] = decomp_line_hough(hough);
 plot(acct);
 
 figure(20)
 plot(accro);
 
-[Xfeature, Yfeature] = MatrixMax(hough)
+% [Xfeature, Yfeature] = MatrixMax(hough)
 
 
 
