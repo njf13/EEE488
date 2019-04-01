@@ -61,7 +61,7 @@ classdef dendrite < handle
         end
         
         % A function to plot a dendrite
-        function y = plot( obj)
+        function y = plot( obj, overlay)
             fig = figure;
             hold;
             for i = 1:length(obj.dA)
