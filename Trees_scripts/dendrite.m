@@ -62,13 +62,7 @@ classdef dendrite < handle
         
         % A function to plot a dendrite
         function y = plot( obj, overlay)
-            % Check if the overlay vector doesn't exist, and replace it
-            % with a blank one. That way the user can still call the plot
-            % function with no arguments if they just want a normal plot.
-            if(~exist(overlay))
-                
-            end
-            
+                       
             fig = figure;
             hold;
             for i = 1:length(obj.dA)
@@ -78,8 +72,32 @@ classdef dendrite < handle
                     plot([obj.X(i) obj.X(connections(j))], [obj.Y(i) obj.Y(connections(j))],'-k','LineWidth',1)
                 end
             end
+            
+            % Check if the overlay vector exists and if so, plot the points
+            % representing the values.
+            % That way the user can still call the plot
+            % function with no arguments if they just want a normal plot.
+            if(exist('overlay', 'var'))
+                % Find max and min values of the vector.
+                high = max(overlay);
+                low  = min(overlay);
+                
+                % Now normalize all of the overlay values to a range of 0
+                % to 1.
+                overlay = (1/(high-low))*(overlay - low);
+                
+                % Map these normalized values to rbg by finding the
+                % distance of each value from 1 (r), 0.5 (g), and 0 (b).
+                % This approach is from https://codereview.stackexchange.com/questions/64708/calculation-of-rgb-values-given-min-and-max-values
+                               
+                % Plot values
+                for i = 1:obj.nodes
+                    plot(obj.X(i), obj.Y(i), 'o', 'MarkerFaceColor', [norm(overlay(i)-1) norm(overlay(i)-0.5) overlay(i)])
+                end
+            end
+            
             xlim([min(obj.X)-1 max(obj.X)+1]);
-            ylim([min(obj.Y)-1 max(obj.Y)+1]);
+            ylim([min(obj.Y)-1 max(obj.Y)+1]);            
             axis equal;
             axis off;
             hold off;
@@ -129,7 +147,7 @@ classdef dendrite < handle
         % the of the parent node, and adding 1 to it.
         
         function y = branchOrder(obj)
-            y = zeros(1,obj.nodes);
+            y = zeros(obj.nodes, 1);
             
             for i = 2:obj.nodes
                 parentNode = find(obj.dA(i,:));
@@ -341,7 +359,7 @@ classdef dendrite < handle
             % cannot be zero. So if any zeros remain at the end, it means 
             % there was an error. It could also be a node that is not attached to anything.
             
-            strahler = zeros(1,obj.nodes);
+            strahler = zeros(obj.nodes, 1);
             % Set all of the strahler values of the termination (BCT==0) nodes to 1.
             strahler(obj.BCT==0) = 1;
             % Now I want to scroll through all of the other nodes until 
