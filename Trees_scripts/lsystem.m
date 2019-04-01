@@ -119,12 +119,31 @@ classdef lsystem < handle
        
        function y = replaceChar(obj, inChar)
            ruleNumber = find(obj.rules(:,1)==inChar);
+           ruleSelection = 1; % This part is for stochastics.
            
-           % Will add randome choice option here for when the ruleNumber
-           % returns more than one value.
+           % Determine if there is more than one rule entry, which would
+           % indicate that there is a random choice between the different
+           % options.
+           if(length(ruleNumber)>1)
+               % Pick a random value to start with.
+               randomPick = rand(1);
+               
+               % Use this value to accumulate the probability values. All
+               % of the probabilities should add up to 1.
+               probRange = 0;
+               
+               
+               for i= 1:length(ruleNumber)
+                   probRange = probRange + str2num(obj.rules(ruleNumber(i), 3));
+                   if( randomPick <= probRange)
+                       ruleSelection = i;
+                       break;
+                   end
+               end
+           end
            
            % Return the next replacement string
-           y = obj.rules(ruleNumber, 2);
+           y = obj.rules(ruleNumber(ruleSelection), 2);
        end
        
        function y = push(obj)
