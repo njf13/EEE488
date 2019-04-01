@@ -1,4 +1,4 @@
- classdef dendrite < handle
+classdef dendrite < handle
     properties
         %X, Y, and Z coordinates. I will leave Z empty for now. 
         %I'll probably create an overloaded constructor if we want
@@ -15,7 +15,6 @@
     end
     methods
         %Constructor Function
-
         function obj = dendrite(dA_, X_, Y_, Z_)
             obj.dA = full(dA_);
             obj.X = X_;
@@ -69,13 +68,11 @@
                 connections = find(obj.dA(:,i));
 
                 for j = 1:length(connections)
-
                     plot([obj.X(i) obj.X(connections(j))], [obj.Y(i) obj.Y(connections(j))],'-k','LineWidth',1)
                 end
             end
             xlim([min(obj.X)-1 max(obj.X)+1]);
             ylim([min(obj.Y)-1 max(obj.Y)+1]);
-
             axis equal;
             axis off;
             hold off;
@@ -87,8 +84,7 @@
             % Will rotate X then Y then Z. If you want to rotate in a
             % different order, you'll need to run the function more than
             % one time.
-            startXYZ = [obj.X, obj.Y, obj.Z];
-
+            startXYZ = [obj.X, obj.Y, obj.Z]
             RX = [1 0 0;
                 0 cosd(X_degrees) sind(X_degrees);
                 0 -sind(X_degrees) cosd(X_degrees);];
@@ -106,7 +102,6 @@
             endZ = endX;
             
             for i = 1:length(endX)
-
                 size(RX)
                 size(RY)
                 size(RZ)
@@ -141,18 +136,17 @@
         function y = netlist( obj)
             y = [];
             branchCount = 1;
-
             BO = obj.branchOrder;
             r0 = 100; % start with a resistance of 100?
-            c0 = 100; % ÂµF
+            c0 = 100; % µF
             
             str = ["* Netlist for Tree","","","","","","",""];
             
-            disp(str);
+            disp(join(str,''));
             y = [y; str];
             str = ['* Netlist created on ' , date(),"","","","","",""];
            
-            disp(str);
+            disp(join(str,''));
             y = [y; str];
             fprintf('\n')
             
@@ -171,7 +165,6 @@
             for i = 1:obj.nodes
                 daughterNodes = find(obj.dA(:, i));
                 for j = 1:length(daughterNodes)
-
                     % If the other node is a termination point, it should
                     % connect to Vsource, instead of a n# node.
                     if(obj.BCT(daughterNodes(j))== 0)
@@ -192,16 +185,15 @@
                     branchCount = branchCount+1;
                 end
             end
-
             
             % Add analysis commands here
             % All analysis commands except DC op will have an asterisk at
             % the beginning to "comment" them out. That way the person
             % doing the analysis can remove the asterisk for the desired
             % analysis.
-            str = ["\n.op", "","","","","","",""];
+            str = [".op", "","","","","",""];
             disp(join(str,''));
-            y = [y;str];
+            y = [y;["\n", str]];
             
             str = ["*.tran 1ns 1u", "","","","","","",""];
             disp(join(str,''));
@@ -212,9 +204,9 @@
             y = [y;str];
             
             % Add .end here
-            str = ["\n.end", "","","","","","",""];
+            str = [".end", "","","","","",""];
             disp(join(str,''));
-            y = [y;str];
+            y = [y;["\n", str]];
         end
         
         % Create a function to generate the Ladder network that corresponds
@@ -266,3 +258,4 @@
         end
     end
 end
+ 
