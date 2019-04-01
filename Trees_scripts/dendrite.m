@@ -62,6 +62,13 @@ classdef dendrite < handle
         
         % A function to plot a dendrite
         function y = plot( obj, overlay)
+            % Check if the overlay vector doesn't exist, and replace it
+            % with a blank one. That way the user can still call the plot
+            % function with no arguments if they just want a normal plot.
+            if(~exist(overlay))
+                
+            end
+            
             fig = figure;
             hold;
             for i = 1:length(obj.dA)
