@@ -92,7 +92,7 @@ classdef dendrite < handle
                                
                 % Plot values
                 for i = 1:obj.nodes
-                    plot(obj.X(i), obj.Y(i), 'o', 'MarkerFaceColor', [norm(overlay(i)-1) norm(overlay(i)-0.5) overlay(i)])
+                    plot(obj.X(i), obj.Y(i), 'o', 'MarkerFaceColor', [overlay(i) norm(overlay(i)-0.5) norm(overlay(i)-1)])
                 end
             end
             
