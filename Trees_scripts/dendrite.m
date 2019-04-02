@@ -61,7 +61,7 @@ classdef dendrite < handle
         end
         
         % A function to plot a dendrite
-        function y = plot( obj, overlay)
+        function y = plot( obj, overlay, nodeLabels)
                        
             fig = figure;
             hold;
@@ -69,7 +69,7 @@ classdef dendrite < handle
                 connections = find(obj.dA(:,i));
 
                 for j = 1:length(connections)
-                    plot([obj.X(i) obj.X(connections(j))], [obj.Y(i) obj.Y(connections(j))],'-k','LineWidth',1)
+                    plot([obj.X(i) obj.X(connections(j))], [obj.Y(i) obj.Y(connections(j))],'-k','LineWidth',1);
                 end
             end
             
@@ -94,6 +94,26 @@ classdef dendrite < handle
                 for i = 1:obj.nodes
                     plot(obj.X(i), obj.Y(i), 'o', 'MarkerFaceColor', [norm(overlay(i)-1) norm(overlay(i)-0.5) overlay(i)])
                 end
+            end
+            
+            % The second optional parameter is a label for each of the
+            % nodes. You may want to label each node with the values in the
+            % overlay vector, or you may want to just label the number of
+            % the nodes.
+            if(exist('nodeLabels', 'var'))
+                switch nodeLabels
+                    case 'n' % n for nodes
+                        labelText = [1:obj.nodes]';
+                    case 'o' % o for overlay
+                        labelText = overlay;
+                    otherwise
+                        labelText = [1:obj.nodes]';
+                end
+                
+                for i = 1:obj.nodes
+                    text(obj.X(i)+1, obj.Y(i)+1, "n"+num2str(labelText(i)));
+                end
+                    
             end
             
             xlim([min(obj.X)-1 max(obj.X)+1]);
