@@ -88,7 +88,7 @@ classdef dendrite < handle
                 
                 % Now normalize all of the overlay values to a range of 0
                 % to 1.
-                overlay = (1/(high-low))*(overlay - low);
+                overlayNormalized = (1/(high-low))*(overlay - low);
                 
                 % Map these normalized values to rbg by finding the
                 % distance of each value from 1 (r), 0.5 (g), and 0 (b).
@@ -96,7 +96,7 @@ classdef dendrite < handle
                                
                 % Plot values
                 for i = 1:obj.nodes
-                    rgb = [overlay(i) norm(overlay(i)-0.5) norm(overlay(i)-1)];
+                    rgb = [overlayNormalized(i) norm(overlayNormalized(i)-0.5) norm(overlayNormalized(i)-1)];
                     plot(obj.X(i), obj.Y(i), 'o', 'MarkerFaceColor', rgb,'MarkerEdgeColor', rgb)
                 end
             end
@@ -108,7 +108,10 @@ classdef dendrite < handle
             if(exist('nodeLabels', 'var'))
                 switch nodeLabels
                     case 'n' % n for nodes
-                        labelText = [1:obj.nodes]';
+                        for i = 1:obj.nodes
+                            labelText(i)= 'n'+i;
+                        end
+                        
                     case 'o' % o for overlay
                         labelText = overlay;
                     otherwise
@@ -116,7 +119,7 @@ classdef dendrite < handle
                 end
                 
                 for i = 1:obj.nodes
-                    text(obj.X(i)+1, obj.Y(i)+1, "n"+num2str(labelText(i)));
+                    text(obj.X(i)+1, obj.Y(i)+1, num2str(labelText(i),4));
                 end
                     
             end
@@ -487,11 +490,15 @@ classdef dendrite < handle
         
         function y = DC( obj, Vdd)
             terminations = find(obj.BCT==0);
-
+            
             RMatrix = zeros(obj.nodes-1, obj.nodes);
             sumV = [];
             if(~exist('Vdd','var'))
                 Vdd = 10;
+            end
+            
+            if(isempty(obj.R))
+                obj.setR;
             end
 
             for i =1:length(terminations)
