@@ -12,6 +12,9 @@ classdef dendrite < handle
         BCT = [];
         %Store the number of nodes. Not sure if it's useful but whatever.
         nodes = 0;
+        
+        % Store a vector indicating the resistance of each branch.
+        R = [];
     end
     methods
         %Constructor Function
@@ -26,6 +29,7 @@ classdef dendrite < handle
             end
             obj.nodes = length(obj.X);
             obj.BCT = ones(1,obj.nodes)*obj.dA;
+            obj.R = obj.setR;
         end
         
         %A function to print the geometry in a format that can be input to
@@ -436,6 +440,51 @@ classdef dendrite < handle
             end
             
             y = strahler;
+        end
+        
+        function y = setR(obj,  calcMethod, inputVal) 
+            
+            if(~exist('calcMethod', 'var'))
+                calcMethod = 'd';
+            elseif(~ischar(calcMethod))
+                if(length(calcMethod)~=obj.nodes)
+                    calcMethod = 'e';
+                else
+                    inputVal = calcMethod;
+                    calcMethod = 'v';
+                end
+            end
+            
+            if(~exist('inputVal','var'))
+                inputVal = 100;
+            end
+            
+            
+            switch calcMethod
+                case 'd' % R doubles at each branch.
+                    y = inputVal*2.^(obj.branchOrder-1);
+                    y(1) = 0;
+                case 'e' % Input error
+                    disp("Error!");
+                    disp("The input must be one of the following:")
+                    disp("- A vector with the same number of entries as there are nodes of the dendrite");
+                    disp("- A single character from this list: 'd'");
+                    y= [];
+                case 'c' % Constant R
+                    y = inputVal*ones(obj.nodes,1);
+                case 'v' % Set R based on an input vector
+                    y = inputVal;
+                otherwise
+                    disp("Error!");
+                    disp("The input must be one of the following:")
+                    disp("- A vector with the same number of entries as there are nodes of the dendrite");
+                    disp("- A single character from this list: 'd'");
+            end
+            
+            obj.R = y;
+        end
+        
+        function y = DC
         end
     end
 end
