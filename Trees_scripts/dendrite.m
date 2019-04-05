@@ -12,6 +12,9 @@ classdef dendrite < handle
         BCT = [];
         %Store the number of nodes. Not sure if it's useful but whatever.
         nodes = 0;
+        
+        % Store a vector indicating the resistance of each branch.
+        R = [];
     end
     methods
         %Constructor Function
@@ -26,6 +29,7 @@ classdef dendrite < handle
             end
             obj.nodes = length(obj.X);
             obj.BCT = ones(1,obj.nodes)*obj.dA;
+            obj.R = obj.setR;
         end
         
         %A function to print the geometry in a format that can be input to
@@ -84,7 +88,7 @@ classdef dendrite < handle
                 
                 % Now normalize all of the overlay values to a range of 0
                 % to 1.
-                overlay = (1/(high-low))*(overlay - low);
+                overlayNormalized = (1/(high-low))*(overlay - low);
                 
                 % Map these normalized values to rbg by finding the
                 % distance of each value from 1 (r), 0.5 (g), and 0 (b).
@@ -92,7 +96,8 @@ classdef dendrite < handle
                                
                 % Plot values
                 for i = 1:obj.nodes
-                    plot(obj.X(i), obj.Y(i), 'o', 'MarkerFaceColor', [overlay(i) norm(overlay(i)-0.5) norm(overlay(i)-1)])
+                    rgb = [overlayNormalized(i) norm(overlayNormalized(i)-0.5) norm(overlayNormalized(i)-1)];
+                    plot(obj.X(i), obj.Y(i), 'o', 'MarkerFaceColor', rgb,'MarkerEdgeColor', rgb)
                 end
             end
             
@@ -103,7 +108,10 @@ classdef dendrite < handle
             if(exist('nodeLabels', 'var'))
                 switch nodeLabels
                     case 'n' % n for nodes
-                        labelText = [1:obj.nodes]';
+                        for i = 1:obj.nodes
+                            labelText(i)= 'n'+i;
+                        end
+                        
                     case 'o' % o for overlay
                         labelText = overlay;
                     otherwise
@@ -111,7 +119,7 @@ classdef dendrite < handle
                 end
                 
                 for i = 1:obj.nodes
-                    text(obj.X(i)+1, obj.Y(i)+1, "n"+num2str(labelText(i)));
+                    text(obj.X(i)+1, obj.Y(i)+1, num2str(labelText(i),4));
                 end
                     
             end
@@ -436,6 +444,112 @@ classdef dendrite < handle
             end
             
             y = strahler;
+        end
+        
+        function y = setR(obj,  calcMethod, inputVal) 
+            
+            if(~exist('calcMethod', 'var'))
+                calcMethod = 'd';
+            elseif(~ischar(calcMethod))
+                if(length(calcMethod)~=obj.nodes)
+                    calcMethod = 'e';
+                else
+                    inputVal = calcMethod;
+                    calcMethod = 'v';
+                end
+            end
+            
+            if(~exist('inputVal','var'))
+                inputVal = 100;
+            end
+            
+            
+            switch calcMethod
+                case 'd' % R doubles at each branch.
+                    y = inputVal*2.^(obj.branchOrder-1);
+                    y(1) = 0;
+                case 'e' % Input error
+                    disp("Error!");
+                    disp("The input must be one of the following:")
+                    disp("- A vector with the same number of entries as there are nodes of the dendrite");
+                    disp("- A single character from this list: 'd'");
+                    y= [];
+                case 'c' % Constant R
+                    y = inputVal*ones(obj.nodes,1);
+                case 'v' % Set R based on an input vector
+                    y = inputVal;
+                otherwise
+                    disp("Error!");
+                    disp("The input must be one of the following:")
+                    disp("- A vector with the same number of entries as there are nodes of the dendrite");
+                    disp("- A single character from this list: 'd'");
+            end
+            
+            obj.R = y;
+        end
+        
+        function y = DC( obj, Vdd)
+            terminations = find(obj.BCT==0);
+            
+            RMatrix = zeros(obj.nodes-1, obj.nodes);
+            sumV = [];
+            if(~exist('Vdd','var'))
+                Vdd = 10;
+            end
+            
+            if(isempty(obj.R))
+                obj.setR;
+            end
+
+            for i =1:length(terminations)
+                startNode= terminations(i);
+                currentNode = startNode;
+                drops = zeros(1,obj.nodes);
+
+                while(currentNode ~= 1)
+                    nextNode= find(obj.dA(currentNode,:)); %Find the node that feeds the current node.
+                    drops(currentNode) = obj.R(currentNode);
+                    currentNode = nextNode;
+                end
+
+                RMatrix(i,:) = drops;
+                sumV =[sumV;Vdd];
+            end
+            
+            branches = find(obj.BCT==2|obj.BCT==1);
+
+            for j = 1:length(branches)
+                RMatrix(i+j,:) = obj.dA(:,branches(j))';
+                RMatrix(i+j,branches(j)) = -1;
+                sumV = [sumV; 0];
+            end
+            
+            currents = RMatrix\sumV;
+
+            Vdrops = currents.*obj.R;
+            
+            
+            dropMat = zeros(obj.nodes);
+
+            for i = 1:obj.nodes
+                currentNode = i;
+                drops = zeros(1,obj.nodes);
+
+                while(currentNode ~= 1)
+                    nextNode= find(obj.dA(currentNode,:)); %Find the node that feeds the current node.
+                    drops(currentNode) = 1;
+
+
+                    currentNode = nextNode;
+                end
+
+                dropMat(i,:) = drops;
+            end
+
+            nodeV = dropMat*Vdrops;
+            
+            y =nodeV;
+
         end
     end
 end
