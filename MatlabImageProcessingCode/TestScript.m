@@ -102,19 +102,19 @@ centersX=centers(2,:)';
 centersY=centers(1,:)';
 
 imgSize = size(WORKING_IMAGE);
+numNeighbors=3;
+[adjMat, weightMat] = findNearestNeighbors(centers(2,:),centers(1,:),numNeighbors);
 
-[mst,idx] = MST_tree(floor(length(centersX)/2), [centersX], [centersY], [zeros(length(centersX),1)], 0.5, 50,[],[],'-b');
 
-dA = mst.dA;
-sizedA = size(dA);
-for i=1:sizedA(1,1)
-    for j=1:sizedA(1,2)
-        if dA(i,j)==1
-            disp(['Connecting ', num2str(centersX(i)), ',', num2str(centersY(i)), ' to ', num2str(centersX(j)), ',',num2str(centersY(j)),'...'])
-            
-            line([centersX(i),centersX(j)],[centersY(i),centersY(j)]);
-        end
-    end
+[w_st, ST, X_st] = kruskal(adjMat, weightMat);
+
+edgeCount = max(size(ST));
+
+ST
+
+for i=1:edgeCount
+    disp(['Connecting ', num2str(centersX(ST(i,1))), ',', num2str(centersY(ST(i,1))), ' to ', num2str(centersX(ST(i,2))), ',',num2str(centersY(ST(i,2))),'...'])
+    line([centersX(ST(i,1)),centersX(ST(i,2))],[centersY(ST(i,1)),centersY(ST(i,2))]);
 end
 
 
