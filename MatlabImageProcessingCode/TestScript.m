@@ -4,6 +4,7 @@ home;
 
 disp('Begin test script...')
 
+addpath(genpath('C:\Users\sysadmin\Downloads\TREES1.15'))
 
 WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view.png';
 SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view subsample 5.png';
@@ -93,16 +94,32 @@ thresholdSubImg = imgThreshold(SUBSAMPLE_IMAGE, level*0.9, maximum);
 centers=[];
 disp('Search for target image...')
 centers = findMoments(WORKING_IMAGE, SUBSAMPLE_IMAGE);
-treeGraph = graph(centers(2,:), centers(1,:));
-treeEdges = treeGraph.Edges;
 figure(18)
 imshow(WORKING_IMAGE);
 hold on;
 plot(centers(2,:),centers(1,:),'x');
-plot(treeEdges, 'b');
+centersX=centers(2,:)';
+centersY=centers(1,:)';
+
+imgSize = size(WORKING_IMAGE);
+
+[mst,idx] = MST_tree(floor(length(centersX)/2), [centersX], [centersY], [zeros(length(centersX),1)], 0.5, 50,[],[],'-b');
+
+dA = mst.dA;
+sizedA = size(dA);
+for i=1:sizedA(1,1)
+    for j=1:sizedA(1,2)
+        if dA(i,j)==1
+            disp(['Connecting ', num2str(centersX(i)), ',', num2str(centersY(i)), ' to ', num2str(centersX(j)), ',',num2str(centersY(j)),'...'])
+            
+            line([centersX(i),centersX(j)],[centersY(i),centersY(j)]);
+        end
+    end
+end
 
 
 
+return
 
 
 
