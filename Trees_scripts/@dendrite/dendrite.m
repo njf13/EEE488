@@ -34,7 +34,7 @@ classdef dendrite < handle
         
         y = necGeometry(obj, length, radius)        
         y = plot( obj, overlay, nodeLabels)
-        y = rotate( obj, X_degrees, Y_degrees, Z_degrees)
+        newDendrite = rotate( obj, X_degrees, Y_degrees, Z_degrees)
         y = branchOrder(obj)
         y = netlist( obj)
         dA = nearestNeighborDA( locations)
