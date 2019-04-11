@@ -1,7 +1,7 @@
 function [centers] = findMoments(inputImage, targetImage)
     upperTolerance = 1.2;
     lowerTolerance =0.8;
-    stride =20;
+    stride = max(size(targetImage))/6;
     
     centers=[]
     [targetSizeX, targetSizeY] = size(targetImage);

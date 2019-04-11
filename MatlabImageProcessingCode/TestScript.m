@@ -10,7 +10,11 @@ WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view.png';
 SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view subsample 5.png';
 
 WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194Square.png';
-SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194SquareSample.png';
+SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194Sample2.png';
+
+WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\DendriteFromNeil2.png';
+SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\DendriteFromNeil2Sample.png';
+
 
 WORKING_IMAGE = imread(WORKING_IMAGE_PATH);
 WORKING_IMAGE = rgb2gray(WORKING_IMAGE);
@@ -94,6 +98,7 @@ thresholdSubImg = imgThreshold(SUBSAMPLE_IMAGE, level*0.9, maximum);
 centers=[];
 disp('Search for target image...')
 centers = findMoments(WORKING_IMAGE, SUBSAMPLE_IMAGE);
+
 figure(18)
 imshow(WORKING_IMAGE);
 hold on;
@@ -102,22 +107,26 @@ centersX=centers(2,:)';
 centersY=centers(1,:)';
 
 imgSize = size(WORKING_IMAGE);
-numNeighbors=3;
-[adjMat, weightMat] = findNearestNeighbors(centers(2,:),centers(1,:),numNeighbors);
+
+[adjMat, weightMat] = findNearestNeighbors(centers(2,:),centers(1,:));
 
 
 [w_st, ST, X_st] = kruskal(adjMat, weightMat);
+[route] = prims(weightMat, max(size(weightMat)));
 
-edgeCount = max(size(ST));
+%edgeCount = max(size(ST));
 
-ST
+routeCount = max(size(route));
 
-for i=1:edgeCount
-    disp(['Connecting ', num2str(centersX(ST(i,1))), ',', num2str(centersY(ST(i,1))), ' to ', num2str(centersX(ST(i,2))), ',',num2str(centersY(ST(i,2))),'...'])
-    line([centersX(ST(i,1)),centersX(ST(i,2))],[centersY(ST(i,1)),centersY(ST(i,2))]);
+% for i=1:edgeCount
+%     disp(['Connecting ', num2str(centersX(ST(i,1))), ',', num2str(centersY(ST(i,1))), ' to ', num2str(centersX(ST(i,2))), ',',num2str(centersY(ST(i,2))),'...'])
+%     line([centersX(ST(i,1)),centersX(ST(i,2))],[centersY(ST(i,1)),centersY(ST(i,2))]);
+% end
+
+for i=1:routeCount
+    disp(['Connecting ', num2str(centersX(route(i,1))), ',', num2str(centersY(route(i,1))), ' to ', num2str(centersX(route(i,2))), ',',num2str(centersY(route(i,2))),'...'])
+    line([centersX(route(i,1)),centersX(route(i,2))],[centersY(route(i,1)),centersY(route(i,2))]);
 end
-
-
 
 return
 
