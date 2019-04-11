@@ -280,7 +280,7 @@ classdef dendrite < handle
             y = [y;["\n", str]];
         end
         
-<<<<<<< HEAD
+
         % A function to create the nearest-neighbor directed adjacency
         % matrix from a set of 2-D locations where the second row of
         % locations is the x-coordinate and the first row of locations is
@@ -299,9 +299,7 @@ classdef dendrite < handle
                 end
             end
         end
-    end
-end
-=======
+
         % Create a function to generate the Ladder network that corresponds
         % to a given dendrite. This is a network that takes one point as an
         % anchor or ground point, and extends a large trunk in one
@@ -405,7 +403,6 @@ end
             close
             I = imread('figure.bmp');
             close;
->>>>>>> dc49fb6d96ce05cb27d4902db5b584de1567bd12
 
             Ibw = ~im2bw(I); %Note that the background need to be 0
             %figure(1);
