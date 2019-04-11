@@ -7,6 +7,16 @@ function newDendrite = merge(dend1, dend2, mergeNode)
     yOffset = dend1.Y(mergeNode);
     zOffset = dend1.Z(mergeNode);
     
+    % The second dendrite should be rotated to match the general trend of
+    % the first dendrite. So I will find the angle of the branch feeding
+    % the branch of the merge node, and rotate by that angle.
+    parentNode = find(dend1.dA(mergeNode,:));
+    grandparentNode = find(dend1.dA(parentNode,:));
+    deltaY = dend1.Y(grandparentNode)-dend1.Y(parentNode);
+    deltaX = dend1.X(grandparentNode)-dend1.Y(parentNode);
+    rotAngle = atand(deltaY/deltaX)
+    dend2 = dend2.rotate(0,0,rotAngle);
+    
     newX = [dend1.X(1:mergeNode-1); dend2.X + xOffset; dend1.X(mergeNode+1:end)];
     newY = [dend1.Y(1:mergeNode-1); dend2.Y + yOffset; dend1.Y(mergeNode+1:end)];
     newZ = [dend1.Z(1:mergeNode-1); dend2.Z + zOffset; dend1.Z(mergeNode+1:end)];
