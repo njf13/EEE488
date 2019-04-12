@@ -42,8 +42,12 @@ classdef dendrite < handle
         y = fracDim(obj)
         y = voronoi(obj)
         y = strahler(obj)
-        y = setR(obj,  calcMethod, inputVal) 
+        
+        
+        rValues = setR(obj,  calcMethod, inputVal) 
+        capValues = setC(obj,  calcMethod, inputVal) 
         y = DC( obj, Vdd)
+        ckt = makeCircuit(obj)
     end
 end
  
