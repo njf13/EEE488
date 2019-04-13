@@ -32,6 +32,7 @@ function rValues = setR(obj,  calcMethod, inputVal)
                     rValues = inputVal*ones(obj.nodes,1);
                 case 'v' % Set R based on an input vector
                     rValues = inputVal;
+
                 case 'dist' % Calculate the R based on the distance between points
                     rValues = zeros(obj.nodes,1);
 
@@ -52,6 +53,7 @@ function rValues = setR(obj,  calcMethod, inputVal)
                             % If you have an input value of 100, then a ten
                             % unit long branch will be 100 ohms.
                             rValues(ii) = (inputVal/10)*norm([deltaX deltaY]);
+
                         end
                     end
                 otherwise

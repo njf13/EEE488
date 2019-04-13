@@ -19,6 +19,7 @@ function capValues = setC(obj,  calcMethod, inputVal)
 
 
     switch calcMethod
+
         case 'd' % C halves at each branch.
             capValues = inputVal*0.5.^(obj.branchOrder-1);
             capValues(1) = 0;
@@ -28,6 +29,7 @@ function capValues = setC(obj,  calcMethod, inputVal)
             disp("- A vector with the same number of entries as there are nodes of the dendrite");
             disp("- A single character from this list: 'd'");
             capValues= [];
+
         case 'c' % Constant C
             capValues = inputVal*ones(obj.nodes,1);
         case 'v' % Set C based on an input vector
@@ -54,6 +56,7 @@ function capValues = setC(obj,  calcMethod, inputVal)
                             capValues(ii) = (inputVal/10)*norm([deltaX deltaY]);
                         end
                     end
+
         otherwise
             disp("Error!");
             disp("The input must be one of the following:")
