@@ -43,7 +43,7 @@ function y = plot( obj, overlay, nodeLabels)
         switch nodeLabels
             case 'n' % n for nodes
                 for i = 1:obj.nodes
-                    labelText(i)= 'n'+i;
+                    labelText(i)= "n"+i;
                 end
 
             case 'o' % o for overlay

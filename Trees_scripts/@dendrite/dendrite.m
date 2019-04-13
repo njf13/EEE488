@@ -15,6 +15,7 @@ classdef dendrite < handle
         
         % Store a vector indicating the resistance of each branch.
         R = [];
+        C = [];
     end
     methods
         %Constructor Function
@@ -30,6 +31,7 @@ classdef dendrite < handle
             obj.nodes = length(obj.X);
             obj.BCT = ones(1,obj.nodes)*obj.dA;
             obj.R = obj.setR;
+            obj.C = obj.setC;
         end
         
         y = necGeometry(obj, length, radius)        
@@ -46,7 +48,7 @@ classdef dendrite < handle
         
         rValues = setR(obj,  calcMethod, inputVal) 
         capValues = setC(obj,  calcMethod, inputVal) 
-        y = DC( obj, Vdd)
+        [vNodes currents] = DC( obj, Vdd)
         ckt = makeCircuit(obj)
     end
 end
