@@ -83,4 +83,5 @@ function y = ladder( obj)
     % all of the constructor operations are performed on the
     % complete data.
     y = dendrite(dA, [X; trunkBranchesX], [Y; trunkBranchesY], []);
+    y.setR('dist',100);
 end
