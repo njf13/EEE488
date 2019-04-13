@@ -46,7 +46,7 @@ classdef dendrite < handle
         
         rValues = setR(obj,  calcMethod, inputVal) 
         capValues = setC(obj,  calcMethod, inputVal) 
-        [vNodes currents] = DC( obj, Vdd)
+        y = DC( obj, Vdd)
         ckt = makeCircuit(obj)
     end
 end

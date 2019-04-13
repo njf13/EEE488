@@ -32,6 +32,7 @@ function rValues = setR(obj,  calcMethod, inputVal)
                     rValues = inputVal*ones(obj.nodes,1);
                 case 'v' % Set R based on an input vector
                     rValues = inputVal;
+
                 case 'dist' % Calculate the R based on the distance between points
                     rValues = zeros(obj.nodes,1);
 
