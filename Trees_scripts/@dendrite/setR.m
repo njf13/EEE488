@@ -45,9 +45,15 @@ function rValues = setR(obj,  calcMethod, inputVal)
                         distance = norm([deltaX deltaY]);
                         
                         if(distance == 0)
+                            
                             rValues(ii) = inputVal/1000;
                         else
-                            rValues(ii) = inputVal*norm([deltaX deltaY]);
+                            % dividing by 10 is really arbitrary. I used
+                            % that to allign better with the other methods.
+                            % If you have an input value of 100, then a ten
+                            % unit long branch will be 100 ohms.
+                            rValues(ii) = (inputVal/10)*norm([deltaX deltaY]);
+
                         end
                     end
                 otherwise
