@@ -135,8 +135,13 @@ centersY=centers(1,:)';
 
 imgSize = size(WORKING_IMAGE);
 
-[adjMat, weightMat] = findNearestNeighbors(centers(2,:),centers(1,:));
+[weightMat] = findNearestNeighbors(centers(2,:),centers(1,:));
 
+%define and load adjMat for use in Kruskal
+adjMat = ones(size(weightMat));
+for i=1:min(size(adjMat))
+    adjMat(i,i)=0;
+end
 
 [w_st, ST, X_st] = kruskal(adjMat, weightMat);
 [route] = prims(weightMat, max(size(weightMat)));
@@ -150,10 +155,27 @@ routeCount = max(size(route));
 %     line([centersX(ST(i,1)),centersX(ST(i,2))],[centersY(ST(i,1)),centersY(ST(i,2))]);
 % end
 
+
 for i=1:routeCount
     disp(['Connecting ', num2str(centersX(route(i,1))), ',', num2str(centersY(route(i,1))), ' to ', num2str(centersX(route(i,2))), ',',num2str(centersY(route(i,2))),'...'])
     line([centersX(route(i,1)),centersX(route(i,2))],[centersY(route(i,1)),centersY(route(i,2))]);
 end
+
+%clear adjMat for use in dendrite class
+adjMat = zeros(max(size(centers)));
+%load adjMat for use in dendrite class
+for i=1:max(size(route))
+    parent = route(i,1);
+    child  = route(i,2);
+    if(child<=parent)
+        continue
+    end
+    adjMat(child,parent)=1;
+end
+
+dummyZ = [];
+
+theDendrite = dendrite(sparse(adjMat), centersX, centersY, dummyZ);
 
 
 
