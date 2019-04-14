@@ -12,11 +12,11 @@ SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view subsam
 WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194Square.png';
 SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194Sample2.png';
 
-WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\DendriteFromNeil2.png';
-SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\DendriteFromNeil2Sample.png';
-SUBSAMPLE_IMAGE_PATH_2 = 'c:\Users\sysadmin\Pictures\DendriteFromNeil2Sample2.png';
-SUBSAMPLE_IMAGE_PATH_3 = 'c:\Users\sysadmin\Pictures\DendriteFromNeil2Sample3.png';
-SUBSAMPLE_IMAGE_PATH_4 = 'c:\Users\sysadmin\Pictures\DendriteFromNeil2Sample4.png';
+WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\DendriteFromNeil3.png';
+SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\DendriteFromNeil3Sample.png';
+SUBSAMPLE_IMAGE_PATH_2 = 'c:\Users\sysadmin\Pictures\DendriteFromNeil3Sample2.png';
+SUBSAMPLE_IMAGE_PATH_3 = 'c:\Users\sysadmin\Pictures\DendriteFromNeil3Sample3.png';
+%SUBSAMPLE_IMAGE_PATH_4 = 'c:\Users\sysadmin\Pictures\DendriteFromNeil2Sample4.png';
 
 
 WORKING_IMAGE = imread(WORKING_IMAGE_PATH);
@@ -31,8 +31,8 @@ SUBSAMPLE_IMAGE_2 = rgb2gray(SUBSAMPLE_IMAGE_2);
 SUBSAMPLE_IMAGE_3 = imread(SUBSAMPLE_IMAGE_PATH_3);
 SUBSAMPLE_IMAGE_3 = rgb2gray(SUBSAMPLE_IMAGE_3);
 
-SUBSAMPLE_IMAGE_4 = imread(SUBSAMPLE_IMAGE_PATH_4);
-SUBSAMPLE_IMAGE_4 = rgb2gray(SUBSAMPLE_IMAGE_4);
+% SUBSAMPLE_IMAGE_4 = imread(SUBSAMPLE_IMAGE_PATH_4);
+% SUBSAMPLE_IMAGE_4 = rgb2gray(SUBSAMPLE_IMAGE_4);
 
 
 figure(1)
@@ -84,8 +84,8 @@ thresholdSubImg2 = imgThreshold(SUBSAMPLE_IMAGE_2, level2*0.9, maximum2);
 [level3, maximum3]=imgThresholdOtsu(SUBSAMPLE_IMAGE_3);
 thresholdSubImg3 = imgThreshold(SUBSAMPLE_IMAGE_3, level3*0.9, maximum3);
 
-[level4, maximum4]=imgThresholdOtsu(SUBSAMPLE_IMAGE_4);
-thresholdSubImg4 = imgThreshold(SUBSAMPLE_IMAGE_4, level2*0.9, maximum4);
+% [level4, maximum4]=imgThresholdOtsu(SUBSAMPLE_IMAGE_4);
+% thresholdSubImg4 = imgThreshold(SUBSAMPLE_IMAGE_4, level2*0.9, maximum4);
 
 
 % figure(8)
@@ -122,9 +122,9 @@ disp('Search for target image...')
 centers = findMoments(WORKING_IMAGE, SUBSAMPLE_IMAGE);
 centers2 = findMoments(WORKING_IMAGE, SUBSAMPLE_IMAGE_2);
 centers3 = findMoments(WORKING_IMAGE, SUBSAMPLE_IMAGE_3);
-centers4 = findMoments(WORKING_IMAGE, SUBSAMPLE_IMAGE_4);
+% centers4 = findMoments(WORKING_IMAGE, SUBSAMPLE_IMAGE_4);
 
-centers=[centers, centers2, centers3, centers4];
+centers=[centers, centers2, centers3];%, centers4];
 
 figure(18)
 imshow(WORKING_IMAGE);
@@ -137,24 +137,10 @@ imgSize = size(WORKING_IMAGE);
 
 [weightMat] = findNearestNeighbors(centers(2,:),centers(1,:));
 
-%define and load adjMat for use in Kruskal
-adjMat = ones(size(weightMat));
-for i=1:min(size(adjMat))
-    adjMat(i,i)=0;
-end
 
-[w_st, ST, X_st] = kruskal(adjMat, weightMat);
 [route] = prims(weightMat, max(size(weightMat)));
 
-%edgeCount = max(size(ST));
-
 routeCount = max(size(route));
-
-% for i=1:edgeCount
-%     disp(['Connecting ', num2str(centersX(ST(i,1))), ',', num2str(centersY(ST(i,1))), ' to ', num2str(centersX(ST(i,2))), ',',num2str(centersY(ST(i,2))),'...'])
-%     line([centersX(ST(i,1)),centersX(ST(i,2))],[centersY(ST(i,1)),centersY(ST(i,2))]);
-% end
-
 
 for i=1:routeCount
     disp(['Connecting ', num2str(centersX(route(i,1))), ',', num2str(centersY(route(i,1))), ' to ', num2str(centersX(route(i,2))), ',',num2str(centersY(route(i,2))),'...'])
