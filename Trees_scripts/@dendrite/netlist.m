@@ -4,9 +4,14 @@
 function y = netlist( obj)
     y = [];
     branchCount = 1;
-    BO = obj.branchOrder;
-    r0 = 100; % start with a resistance of 100?
-    c0 = 100; % µF
+    
+    if(isempty(obj.R))
+        obj.setR;
+    end
+    
+    if(isempty(obj.C))
+        obj.setC;
+    end
 
     str = ["* Netlist for Tree","","","","","","",""];
 
@@ -75,11 +80,11 @@ function y = netlist( obj)
                 node2 = join(node2,'');
             end
 
-            str = ["r", branchCount, " n" , i, node2, " ", r0*2^BO(i), ""];
+            str = ["r", branchCount, " n" , i, node2, " ", obj.R(daughterNodes(j)), ""];
             disp(join(str,''));
             y = [y;str];
 
-            str = ["c", branchCount, node2, " gnd ",c0*0.5^BO(i),"u", "",""];
+            str = ["c", branchCount, node2, " gnd ",obj.C(daughterNodes(j)),"u", "",""];
             disp(join(str,''));
             y = [y;str];
 
