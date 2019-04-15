@@ -163,7 +163,16 @@ dummyZ = [];
 
 theDendrite = dendrite(sparse(adjMat), centersX, centersY, dummyZ);
 
+capMatrix = ones([1,length(centersX)]);
+resMatrix = ones([1,length(centersX)]);
 
+capMatrix = 100e-6.*capMatrix;
+resMatrix = 100.*resMatrix;
+
+theDendrite.setC(capMatrix);
+theDendrite.setR(resMatrix);
+
+theDendrite.netlist();
 
 return
 
