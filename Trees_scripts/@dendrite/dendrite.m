@@ -50,6 +50,8 @@ classdef dendrite < handle
         capValues = setC(obj,  calcMethod, inputVal) 
         [vNodes currents] = DC( obj, Vdd)
         ckt = makeCircuit(obj)
+        
+        delay = elmore(obj);
     end
 end
  
