@@ -16,6 +16,7 @@ classdef dendrite < handle
         % Store a vector indicating the resistance of each branch.
         R = [];
         C = [];
+        circuit;
     end
     methods
         %Constructor Function
