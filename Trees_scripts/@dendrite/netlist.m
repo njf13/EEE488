@@ -84,7 +84,7 @@ function y = netlist( obj)
             disp(join(str,''));
             y = [y;str];
 
-            str = ["c", branchCount, node2, " gnd ",obj.C(daughterNodes(j)),"u", "",""];
+            str = ["c", branchCount, node2, " gnd ",obj.C(daughterNodes(j)),"", "",""];
             disp(join(str,''));
             y = [y;str];
 
