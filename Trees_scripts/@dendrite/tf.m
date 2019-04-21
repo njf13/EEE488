@@ -8,7 +8,7 @@ function Zeq = tf(obj, minFreq, maxFreq)
     BCT = obj.BCT;
     X = obj.X;
     Y = obj.Y;
-    %index = [1:obj.nodes];
+    index = [1:obj.nodes]
     
     errorCheck = false;
     
@@ -39,7 +39,9 @@ function Zeq = tf(obj, minFreq, maxFreq)
                 % Now clean up the matrices and vectors so we know that these networks were combined.
                 X(terminations(ii)) = [];
                 Y(terminations(ii)) = [];
-                %index(ii) = []
+                
+                terminations(ii);
+                index(terminations(ii)) = [];
                    
                 dA(terminations(ii),:) =[];
                 dA(:,terminations(ii)) =[];
@@ -68,18 +70,27 @@ function Zeq = tf(obj, minFreq, maxFreq)
                     % Now clean up.
                     X(terminations(ii)) = [];
                     Y(terminations(ii)) = [];
-                    %index(terminations(ii)) = []
+                    
+                    terminations(ii);
+                    index(terminations(ii)) = [];
+                    
                     
                     dA(terminations(ii),:) =[];
                     dA(:,terminations(ii)) =[];
-
-
-                    X(sister-1) = [];
-                    Y(sister-1) = [];
-                    %index(sister-1) = [];
                     
-                    dA(sister-1,:) =[];
-                    dA(:,sister-1) =[];
+                    if(terminations(ii)< sister)
+                        sister = sister-1;
+                    end
+
+                    X(sister) = [];
+                    Y(sister) = [];
+                    
+                    sister
+                    index
+                    index(sister) = []
+                    
+                    dA(sister,:) =[];
+                    dA(:,sister) =[];
 
                     BCT = ones(1,length(X))*dA;
 
@@ -89,16 +100,18 @@ function Zeq = tf(obj, minFreq, maxFreq)
         end
     end
     
-    dnew = dendrite(dA, X, Y,[]);
-    dnew.plot;
+    dnew = dendrite(dA, X, Y,[])
+    dnew.plot
     
     Zosc = zeros(length(freq),1);
+    
     parent
-    %index(parent)
+    index(parent)
     for ii = 1:length(freq)
         Zosc(ii) = Tmatrix{2,ii}(1,2)/Tmatrix{2,ii}(1,1);
     end
-    semilogx(abs(s),20*log10(abs(Zosc)))
+    %figure
+    %semilogx(abs(s),20*log10(abs(Zosc)))
     
     f = frd(Zosc,abs(s),'FrequencyUnit','rad/s');
     Zeq = tfest(f,40);
