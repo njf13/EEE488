@@ -1,4 +1,20 @@
 function Zeq = tf(obj, minFreq, maxFreq)
+% Function to return complex impedance of a dendrite assuming all of the
+% termination nodes are connected to the same AC source.
+% "minFreq" - the first input is the low end of the frequency range tested.
+% "maxFreq" - the second input is the high end of the requency range
+% tested.
+% If no inputs are given, the script will sweep from 0.1H to 1GHz.
+
+    if(~exist('minFreq','var'))
+        minFreq = 0.1;
+    end
+    
+    
+    if(~exist('maxFreq','var'))
+        maxFreq = 10^9;
+    end
+
     freq = logspace(log10(minFreq), log10(maxFreq),100);
     s = 1i*2*pi*freq;
     
@@ -8,7 +24,7 @@ function Zeq = tf(obj, minFreq, maxFreq)
     BCT = obj.BCT;
     X = obj.X;
     Y = obj.Y;
-    index = [1:obj.nodes]
+    index = [1:obj.nodes];
     
     errorCheck = false;
     
@@ -24,8 +40,8 @@ function Zeq = tf(obj, minFreq, maxFreq)
     while(length(X)>2 && errorCheck == false)
         terminations = find(BCT==0);
 
-        dnew = dendrite(dA, X, Y,[]);
-        dnew.plot;
+        %dnew = dendrite(dA, X, Y,[]);
+        %dnew.plot;
         
         for ii=1:length(terminations)
 
@@ -34,7 +50,7 @@ function Zeq = tf(obj, minFreq, maxFreq)
             if(BCT(parent)==1)
                 for jj = 1:length(freq)
                     % Find the cascaded equivalent matrix by multiplying the ABCD matrices
-                    Tmatrix{parent,jj} = Tmatrix{parent,jj}*Tmatrix{terminations(ii),jj};
+                    Tmatrix{index(parent),jj} = Tmatrix{index(parent),jj}*Tmatrix{index(terminations(ii)),jj};
                 end
                 % Now clean up the matrices and vectors so we know that these networks were combined.
                 X(terminations(ii)) = [];
@@ -61,10 +77,10 @@ function Zeq = tf(obj, minFreq, maxFreq)
                     
                     for jj = 1:length(freq)
                         % If the sister nodes are each terminations, then they can be combined by adding their Y matrices
-                        ySum = ABCD2Y(Tmatrix{terminations(ii),jj}) + ABCD2Y(Tmatrix{sister,jj});
+                        ySum = ABCD2Y(Tmatrix{index(terminations(ii)),jj}) + ABCD2Y(Tmatrix{index(sister),jj});
 
                         % Then they can be merged with the parent node by multiplying the ABCD matrices;
-                        Tmatrix{parent,jj} = Tmatrix{parent,jj}*Y2ABCD(ySum);
+                        Tmatrix{index(parent),jj} = Tmatrix{index(parent),jj}*Y2ABCD(ySum);
                     end
 
                     % Now clean up.
@@ -85,9 +101,7 @@ function Zeq = tf(obj, minFreq, maxFreq)
                     X(sister) = [];
                     Y(sister) = [];
                     
-                    sister
-                    index
-                    index(sister) = []
+                    index(sister) = [];
                     
                     dA(sister,:) =[];
                     dA(:,sister) =[];
@@ -100,15 +114,14 @@ function Zeq = tf(obj, minFreq, maxFreq)
         end
     end
     
-    dnew = dendrite(dA, X, Y,[])
-    dnew.plot
+    %dnew = dendrite(dA, X, Y,[])
+    %dnew.plot
     
     Zosc = zeros(length(freq),1);
     
-    parent
-    index(parent)
+
     for ii = 1:length(freq)
-        Zosc(ii) = Tmatrix{2,ii}(1,2)/Tmatrix{2,ii}(1,1);
+        Zosc(ii) = Tmatrix{index(parent),ii}(1,2)/Tmatrix{index(parent),ii}(1,1);
     end
     %figure
     %semilogx(abs(s),20*log10(abs(Zosc)))
