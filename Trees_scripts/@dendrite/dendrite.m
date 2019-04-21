@@ -30,8 +30,8 @@ classdef dendrite < handle
             end
             obj.nodes = length(obj.X);
             obj.BCT = ones(1,obj.nodes)*obj.dA;
-            obj.R = obj.setR;
-            obj.C = obj.setC;
+            %obj.R = obj.setR;
+            %obj.C = obj.setC;
         end
         
         y = necGeometry(obj, length, radius)        

@@ -9,14 +9,14 @@ addpath(genpath('C:\Users\sysadmin\Downloads\TREES1.15'))
 WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view.png';
 SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\Nicks Tree Simple view subsample 5.png';
 
-WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194Square.png';
-SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194Sample2.png';
+% WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194Square.png';
+% SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\CAM00194Sample2.png';
 
 WORKING_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\DendriteFromNeil3.png';
 SUBSAMPLE_IMAGE_PATH = 'c:\Users\sysadmin\Pictures\DendriteFromNeil3Sample.png';
 SUBSAMPLE_IMAGE_PATH_2 = 'c:\Users\sysadmin\Pictures\DendriteFromNeil3Sample2.png';
 SUBSAMPLE_IMAGE_PATH_3 = 'c:\Users\sysadmin\Pictures\DendriteFromNeil3Sample3.png';
-%SUBSAMPLE_IMAGE_PATH_4 = 'c:\Users\sysadmin\Pictures\DendriteFromNeil2Sample4.png';
+
 
 
 WORKING_IMAGE = imread(WORKING_IMAGE_PATH);
@@ -101,13 +101,13 @@ thresholdSubImg3 = imgThreshold(SUBSAMPLE_IMAGE_3, level3*0.9, maximum3);
 % dilated = dilation(WORKING_IMAGE, templateGaussianEven);
 % imshow(dilated);
 % 
-% figure(11)
-% edgeImg=detect_edges(thresholdImg);
-% imshow(edgeImg);
+figure(11)
+edgeImg=detect_edges(thresholdImg);
+imshow(edgeImg);
 % 
-% figure(12)
-% edgeImg = detect_edges_sobel_2(thresholdImg,3);
-% imshow(edgeImg);
+figure(12)
+edgeImg = detect_edges_sobel_2(thresholdImg,3);
+imshow(edgeImg);
 % 
 % figure(13)
 % curveConnImg = curve_connect( edgeImg);
@@ -197,7 +197,7 @@ houghStd = std(hough,1,'all');
 [rr,cc]=size(hough);
 for i=1:rr
     for j=1:cc
-        if hough(i,j)<3.0*houghStd
+        if hough(i,j)<2.5*houghStd
             hough(i,j)=0;
         end
     end

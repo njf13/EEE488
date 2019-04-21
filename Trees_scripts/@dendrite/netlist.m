@@ -69,6 +69,8 @@ function y = netlist( obj)
     y = [y;[str, "\n\n"]];            
 
     for i = 1:obj.nodes
+        str = ["*", "x:", obj.X(i), "   y:", obj.Y(i)];
+        disp(join(str,''));
         daughterNodes = find(obj.dA(:, i));
         for j = 1:length(daughterNodes)
             % If the other node is a termination point, it should
@@ -80,6 +82,8 @@ function y = netlist( obj)
                 node2 = join(node2,'');
             end
 
+            
+            
             str = ["r", branchCount, " n" , i, node2, " ", obj.R(daughterNodes(j)), ""];
             disp(join(str,''));
             y = [y;str];
