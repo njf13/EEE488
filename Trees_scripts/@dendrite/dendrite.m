@@ -16,6 +16,7 @@ classdef dendrite < handle
         % Store a vector indicating the resistance of each branch.
         R = [];
         C = [];
+        circuit;
     end
     methods
         %Constructor Function
@@ -51,7 +52,8 @@ classdef dendrite < handle
         [vNodes currents] = DC( obj, Vdd)
         ckt = makeCircuit(obj)
         
-        delay = elmore(obj);
+        delay = elmore(obj)
+        Zeq = tf(obj, minFreq, maxFreq)
     end
 end
  
