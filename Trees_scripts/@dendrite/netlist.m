@@ -40,7 +40,7 @@ function y = netlist( obj)
     disp(join(str,''));
     y = [y;str];
 
-    str = ["*.AC dec 10 10 1G", "","","","","","",""];
+    str = ["*.AC dec 10 0.1 1G", "","","","","","",""];
     disp(join(str,''));
     y = [y;str];
 
